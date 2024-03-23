@@ -23,7 +23,8 @@ class Command(BaseCommand):
                 self.check(databases=['default'])
                 db_up = True
             except (Psycop2Error, OperationalError):
-                self.stdout.write('Database unvaibale, attendez vous une second ...')
+                self.stdout.write('Database unvaibale, attendez vous une \
+                                   second ...')
                 time.sleep(1)
         self.stdout.write(self.style.SUCCESS("Database Ok!"))
 
