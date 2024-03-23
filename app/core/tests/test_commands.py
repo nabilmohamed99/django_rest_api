@@ -9,6 +9,7 @@ from django.test import SimpleTestCase
 """L'objet check fait référence à une méthode ou une fonction de la classe 
 Command qui est responsable de vérifier si la base de données est prête. """
 
+
 @patch('core.management.commands.wait_for_db.Command.check')
 class CommandTests(SimpleTestCase):
     """Test commands."""
@@ -16,9 +17,10 @@ class CommandTests(SimpleTestCase):
         """Test waiting for database if database ready."""
         patched_check.return_value = True  
         call_command('wait_for_db')
-        patched_check.assert_called_once_with(databases=['default'])  # verifier si le mock object is calling with right thing from our weight
-    
-
+        # verifier si le mock object is calling with right thing from our 
+        # weight
+        patched_check.assert_called_once_with(databases=['default'])  
+   
     @patch('time.sleep')
     def test_wait_for_db_delay(self, patched_sleep, patched_check):
         """Test waiting for database when getting OperationalError."""
