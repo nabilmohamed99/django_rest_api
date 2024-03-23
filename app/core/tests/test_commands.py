@@ -6,7 +6,7 @@ from django.core.management import call_command
 from django.db.utils import OperationalError
 from django.test import SimpleTestCase
 
-"""L'objet check fait référence à une méthode ou une fonction de la classe 
+"""L'objet check fait référence à une méthode ou une fonction de la classe
 Command qui est responsable de vérifier si la base de données est prête. """
 
 
@@ -14,13 +14,14 @@ Command qui est responsable de vérifier si la base de données est prête. """
 class CommandTests(SimpleTestCase):
     """Test commands."""
     def test_wait_for_db_ready(self, patched_check):
-        """Test waiting for database if database ready."""
-        patched_check.return_value = True  
+        """Test waiting for database if database ready.
+         """
+        patched_check.return_value = True
         call_command('wait_for_db')
-        # verifier si le mock object is calling with right thing from our 
+        # verifier si le mock object is calling with right thing from our \
         # weight
-        patched_check.assert_called_once_with(databases=['default'])  
-   
+        patched_check.assert_called_once_with(databases=['default'])
+
     @patch('time.sleep')
     def test_wait_for_db_delay(self, patched_sleep, patched_check):
         """Test waiting for database when getting OperationalError."""
