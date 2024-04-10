@@ -2,7 +2,12 @@
 Serializers pour l'user Api View.
 """
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import (
+    get_user_model,
+    authenticate
+
+)
+from django.utils.translation import gettext as _
 
 from rest_framework import serializers
 
@@ -20,3 +25,32 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         """Create and retrun a user with encrypted password"""
         return get_user_model().objects.create_user(**validated_data)
+
+
+class AuthTokenSerializer(serializers.Serializer):
+    """Serializer pour l'utilisateur auth token"""
+    email = serializers.EmailField()
+    password = serializers.CharField(
+        # le type hidden
+        style={'input_type': 'password'},
+        # trim the input  space on the last of input
+        trim_whitespace=False,
+    )
+
+    def validate(self, attrs):
+        """Valider l'authentification de l'utilisateur"""
+        email = attrs.get('email')
+        password = attrs.get('password')
+        user = authenticate(
+            # request context contient des objets
+            # comme le header de message https
+            request=self.context.get('request'),
+            username=email,
+            password=password,
+
+        )
+        if not user:
+            msg = _('ON peut pas se connecter avec ces credentials')
+            raise serializers.ValidationError(msg, code='authorization')
+        attrs['user'] = user
+        return attrs

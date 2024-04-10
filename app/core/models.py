@@ -11,7 +11,7 @@ from django.contrib.auth.models import (
 
 
 class UserManager(BaseUserManager):
-    """Manager for users"""
+    """Manager pour les users"""
     def create_user(self, email, password=None, **extra_fields):
         """Create , save and return a new user"""
         if not email:
