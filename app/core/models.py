@@ -2,6 +2,7 @@
 Database models.
 """
 from django.db import models
+from django.conf import settings
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -41,3 +42,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     USERNAME_FIELD = 'email'
+
+
+
+class Appariel(models.Model):
+    """Appariel model."""
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+
+    user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='appariels', on_delete=models.CASCADE)
+
+    class Meta():
+         ordering = ('name',)
+    def __str__(self):
+        return self.name
+
