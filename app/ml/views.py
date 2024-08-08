@@ -2,11 +2,14 @@
 Views pour le module Machine Learning
 
 """
-from rest_framework import viewsets
+from rest_framework import (
+    viewsets,
+    mixins,
+)
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
-from core.models import Appariel
+from core.models import Appariel, AppData
 from ml import serializers
 
 class ApparielViewSet(viewsets.ModelViewSet):
@@ -31,3 +34,18 @@ class ApparielViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Creer un nouveau appariel"""
         serializer.save(user=self.request.user)
+
+
+class AppDataView(mixins.DestroyModelMixin,
+                  mixins.UpdateModelMixin,
+                  mixins.ListModelMixin,
+                  viewsets.GenericViewSet):
+    """Manager les AppData"""
+    serializer_class =serializers.AppDataSerializer
+    queryset = AppData.objects.all()
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        """Filtrer pour l'utilisateur authentifié"""
+        return self.queryset.filter(appariel__user=self.request.user).order_by('-id')

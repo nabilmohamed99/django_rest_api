@@ -44,16 +44,25 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
 
-
 class Appariel(models.Model):
     """Appariel model."""
     name = models.CharField(max_length=100, unique=True)
     description = models.TextField()
 
     user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='appariels', on_delete=models.CASCADE)
+    
 
     class Meta():
          ordering = ('name',)
     def __str__(self):
         return self.name
 
+
+class AppData(models.Model):
+     appariel= models.ForeignKey(Appariel, on_delete=models.CASCADE)
+     datetime = models.DateTimeField()
+     data = models.JSONField()
+
+     class Meta :
+          db_table= "core_appariel_data"
+          unique_together = ('appariel','datetime')

@@ -7,6 +7,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 
 from core import models
+from django.utils.dateparse import parse_datetime
 
 
 class ModelTests(TestCase):
@@ -65,3 +66,33 @@ class ModelTests(TestCase):
             description='tr6'
         )
         self.assertEqual(str(model), model.name)
+
+    def test_create_appariel(self):
+        """Test creating a appariel."""
+        user = get_user_model().objects.create_user(
+            'test78@example.com',
+            'testpass123'
+        )
+
+        appariel = models.Appariel.objects.create(
+            user=user,
+            name='tr6',
+            description='tr6'
+        )
+
+        test_datetime = parse_datetime("2024-01-01T00:00:00Z")
+
+        model = models.AppData.objects.create(
+            data={"test": "test"},
+            datetime=test_datetime,
+            appariel=appariel
+        )
+
+        self.assertEqual(model.appariel, appariel)
+        self.assertEqual(model.data, {"test": "test"})
+        self.assertEqual(model.datetime, test_datetime)
+    def tearDown(self):
+        pass
+
+        # self.appariel.delete()
+        # self.user.delete()

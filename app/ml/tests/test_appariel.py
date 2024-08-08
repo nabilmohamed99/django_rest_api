@@ -7,7 +7,10 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework.test import APIClient
 from rest_framework import status
-from core.models import Appariel
+from core.models import (
+    Appariel,
+    AppData
+)
 from ml.serializers import ApparielSerializer, ApparielDetailSerializer
 from django.utils.crypto import get_random_string
 
@@ -164,4 +167,28 @@ class PrivateApparielApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Appariel.objects.filter(pk=appariel.pk).exists())
 
+
+    def test_create_appariel_with_new_data(self):
+        """Test creating an appariel with new data"""
+        payload = {
+            'name': 'appariel_1',
+            'description': 'test description',
+            'app_data': [
+                {'datetime': '2024-01-01T00:00:00Z', 'data': {'key': 'value1'}},
+                {'datetime': '2024-01-02T00:00:00Z', 'data': {'key': 'value2'}}
+            ]
+        }
+        res = self.client.post(APPARIEL_URL, payload, format='json')
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+
+        appariels = Appariel.objects.filter(user=self.user)
+        self.assertEqual(len(appariels), 1)
+        appariel = appariels[0]
+
+        # Vérifiez les données associées
+        app_data = AppData.objects.filter(appariel=appariel)
+        print(app_data)
+        self.assertEqual(app_data.count(), 2)
+        for data in payload['app_data']:
+            self.assertTrue(app_data.filter(data=data['data']).exists())
 

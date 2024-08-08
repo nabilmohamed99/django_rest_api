@@ -9,6 +9,7 @@ from ml import views
 
 router = DefaultRouter()
 router.register(r'appariels', views.ApparielViewSet)
+router.register(r'AppData',views.AppDataView)
 
 app_name = 'ml'
 
