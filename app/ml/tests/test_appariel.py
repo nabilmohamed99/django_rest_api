@@ -192,3 +192,21 @@ class PrivateApparielApiTests(TestCase):
         for data in payload['app_data']:
             self.assertTrue(app_data.filter(data=data['data']).exists())
 
+    def test_create_appariel_on_update(self):
+        """Test creating an appariel with new data on update"""
+        appariel = create_appariel(user=self.user)
+        payload = {
+            'app_data': [
+                {'datetime': '2024-01-01T00:00:00Z', 'data': {'key': 'value1'}},
+                {'datetime': '2024-01-02T00:00:00Z', 'data': {'key': 'value2'}}
+            ]
+        }
+        url = detail_url(appariel.id)
+        res = self.client.patch(url, payload, format='json')
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+
+        appariel.refresh_from_db()
+        app_data = AppData.objects.filter(appariel=appariel)
+        self.assertEqual(app_data.count(), 2)
+        for data in payload['app_data']:
+            self.assertTrue(app_data.filter(data=data['data']).exists())

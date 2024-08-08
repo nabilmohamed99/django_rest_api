@@ -9,7 +9,6 @@ from django.contrib.auth import get_user_model
 from core import models
 from django.utils.dateparse import parse_datetime
 
-
 class ModelTests(TestCase):
     """Test models."""
 
@@ -91,6 +90,27 @@ class ModelTests(TestCase):
         self.assertEqual(model.appariel, appariel)
         self.assertEqual(model.data, {"test": "test"})
         self.assertEqual(model.datetime, test_datetime)
+
+    def test_create_MLModel(self):
+        """Test creating a MLModel."""
+        appariel = models.Appariel.objects.create(
+            user=get_user_model().objects.create_user(
+                email="user@exemple.com",
+                password="test123"
+            ),
+            name="tr6",
+            description="tr6"
+        )
+        ml_model=models.MLModel.objects.create(
+            appariel=appariel,
+            name="model1",
+
+
+
+            created_at=parse_datetime("2024-01-01T00:00:00Z"),
+            updated_at=parse_datetime("2024-01-01T00:00:00Z"),
+            model_file="C:\\WorkSpace\LemoIA\\rest_api_ml\\restful_ml_api\\models\\model_nbeats_tr1_2_energie.keras"
+        )
     def tearDown(self):
         pass
 

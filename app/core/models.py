@@ -3,6 +3,7 @@ Database models.
 """
 from django.db import models
 from django.conf import settings
+from django.utils.dateparse import parse_datetime
 
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -50,7 +51,7 @@ class Appariel(models.Model):
     description = models.TextField()
 
     user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='appariels', on_delete=models.CASCADE)
-    
+
 
     class Meta():
          ordering = ('name',)
@@ -66,3 +67,21 @@ class AppData(models.Model):
      class Meta :
           db_table= "core_appariel_data"
           unique_together = ('appariel','datetime')
+
+class MLModel(models.Model):
+    """MLModel model."""
+    name = models.CharField(max_length=100, unique=True)
+    description = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    appariel = models.ForeignKey(Appariel, on_delete=models.CASCADE)
+    model_file = models.FileField(upload_to='models/')
+
+
+    class Meta():
+        ordering = ('name',)
+
+    def __str__(self):
+        return self.name
+
+

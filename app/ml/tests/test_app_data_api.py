@@ -131,3 +131,5 @@ class PrivateAppDataApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         app_data= AppData.objects.filter(id=app_data.id)
         self.assertFalse(app_data.exists())
+
+        

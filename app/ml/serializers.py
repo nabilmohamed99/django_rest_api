@@ -4,8 +4,15 @@ Serializers for the ml
 
 from rest_framework import serializers
 
-from core.models import Appariel,AppData
+from core.models import Appariel,AppData,MLModel
 
+
+
+class MLModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MLModel
+        fields = ['pk', 'name', 'appariel']
+        read_only_fields = ['pk', 'appariel']
 
 class AppDataSerializer(serializers.ModelSerializer):
     """Serializer pour AppData"""
@@ -34,6 +41,20 @@ class ApparielSerializer(serializers.ModelSerializer):
         for app_data in app_data_data:
             AppData.objects.create(appariel=appariel, **app_data)
         return appariel
+
+    def update(self, instance, validated_data):
+        """update an appariel"""
+        app_data_data = validated_data.pop('appdata_set', None)
+
+        for attr,value in validated_data.items():
+            setattr(instance,attr,value)
+        instance.save()
+        if app_data_data is not None:
+            AppData.objects.filter(appariel=instance).delete()
+            for app_data in app_data_data:
+                AppData.objects.create(appariel=instance, **app_data)
+        return instance
+
 
 class ApparielDetailSerializer(ApparielSerializer):
     """Serializer pour appariel detail"""
