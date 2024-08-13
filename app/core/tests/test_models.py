@@ -2,6 +2,7 @@
 Test for models
 """
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.test import TestCase
 from django.contrib.auth import get_user_model
@@ -111,6 +112,14 @@ class ModelTests(TestCase):
             updated_at=parse_datetime("2024-01-01T00:00:00Z"),
             model_file="C:\\WorkSpace\LemoIA\\rest_api_ml\\restful_ml_api\\models\\model_nbeats_tr1_2_energie.keras"
         )
+    @patch('core.models.uuid.uuid4')
+    def test_mlmodel_file_name_uuid(self, mock_uuid):
+        """Test generating a file path """
+        uuid="test-uuid"
+        mock_uuid.return_value=uuid
+        file_path=models.ml_model_upload_path(None,'myfile.keras')
+
+
     def tearDown(self):
         pass
 

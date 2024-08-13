@@ -10,7 +10,14 @@ from django.contrib.auth.models import (
     BaseUserManager,
     PermissionsMixin
 )
+import os
+import uuid
 
+def ml_model_upload_path(instance, filename):
+    """Generate file path for new model"""
+    ext= os.path.splitext(filename)[1]
+    filename = f'{uuid.uuid4()}{ext}'
+    return os.path.join('uploads','mlmodels',filename)
 
 class UserManager(BaseUserManager):
     """Manager pour les users"""
@@ -75,7 +82,7 @@ class MLModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     appariel = models.ForeignKey(Appariel, on_delete=models.CASCADE)
-    model_file = models.FileField(upload_to='models/')
+    model_file = models.FileField(upload_to=ml_model_upload_path)
 
 
     class Meta():

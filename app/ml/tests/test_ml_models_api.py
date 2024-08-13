@@ -7,12 +7,20 @@ from django.utils.crypto import get_random_string
 
 from rest_framework import status
 from rest_framework.test import APIClient
+from unittest.mock import patch
 
 from core.models import MLModel, Appariel
 from ml.serializers import MLModelSerializer
 from django.utils.dateparse import parse_datetime
+import os
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 ML_MODEL_URL = reverse('ml:mlmodel-list')
+
+
+def file_upload_url(mlmodel_id):
+    """Create and retrun the file upload URL"""
+    return reverse('ml:mlmodel-upload-file', args=[mlmodel_id])
 
 def user_detail_url(user_id):
     """Return user detail URL"""
@@ -133,3 +141,38 @@ class PrivateModelsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         model=MLModel.objects.filter(appariel__user=self.user)
         self.assertFalse(model.exists())
+
+class FileUploadTests(TestCase):
+    """Test file upload"""
+
+    def setUp(self):
+        self.client = APIClient()
+        self.user = create_user(
+            email="user00001@exemple.com",
+            password="testpass123")
+        self.client.force_authenticate(self.user)
+        self.appariel = create_appariel(user=self.user)
+        self.mlmodel = MLModel.objects.create(
+            appariel=self.appariel,
+            name='model1',
+            created_at=parse_datetime("2024-01-01T00:00:00Z"),
+            updated_at=parse_datetime("2024-01-01T00:00:00Z"),
+            model_file="model_nbeats_tr1_2_energie.keras"
+        )
+    def tearDown(self):
+        self.mlmodel.model_file.delete()
+
+    def test_upload_file_to_mlmodel(self):
+        """Test uploading a file to ML model"""
+        url  = file_upload_url(self.mlmodel.pk)
+        file = SimpleUploadedFile(
+            name='test_model_file.keras',
+            content=b'file_content',
+            content_type='application/octet-stream'
+        )
+        res = self.client.post(url, {'model_file': file}, format='multipart')
+
+        self.mlmodel.refresh_from_db()
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertIn('model_file', res.data)
+        self.assertTrue(os.path.exists(self.mlmodel.model_file.path))

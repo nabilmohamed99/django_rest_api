@@ -11,8 +11,8 @@ from core.models import Appariel,AppData,MLModel
 class MLModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MLModel
-        fields = ['pk', 'name', 'appariel']
-        read_only_fields = ['pk', 'appariel']
+        fields = ['name', 'appariel', 'description', 'model_file']
+        read_only_fields = ['pk']
 
 class AppDataSerializer(serializers.ModelSerializer):
     """Serializer pour AppData"""
@@ -40,6 +40,7 @@ class ApparielSerializer(serializers.ModelSerializer):
 
         for app_data in app_data_data:
             AppData.objects.create(appariel=appariel, **app_data)
+
         return appariel
 
     def update(self, instance, validated_data):
@@ -63,4 +64,12 @@ class ApparielDetailSerializer(ApparielSerializer):
         fields = ApparielSerializer.Meta.fields + ['description']
 
 
-
+class MlModelsFileSerializer(serializers.ModelSerializer):
+   """Serializer for uploading files to ml models"""
+   class Meta:
+        model=MLModel
+        fields=['id','model_file']
+        read_only_fields=['id']
+        extra_kwargs = {
+            'model_file': { 'required': True}
+        }

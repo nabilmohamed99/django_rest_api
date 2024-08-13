@@ -1,0 +1,765 @@
+openapi: 3.0.3
+info:
+  title: ''
+  version: 0.0.0
+paths:
+  /api/ml/AppData/:
+    get:
+      operationId: ml_AppData_list
+      description: Manager les AppData
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppData'
+          description: ''
+  /api/ml/AppData/{id}/:
+    put:
+      operationId: ml_AppData_update
+      description: Manager les AppData
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this app data.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppDataRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AppDataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AppDataRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppData'
+          description: ''
+    patch:
+      operationId: ml_AppData_partial_update
+      description: Manager les AppData
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this app data.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedAppDataRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedAppDataRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedAppDataRequest'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppData'
+          description: ''
+    delete:
+      operationId: ml_AppData_destroy
+      description: Manager les AppData
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this app data.
+        required: true
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/ml/appariels/:
+    get:
+      operationId: ml_appariels_list
+      description: Gérer les appariels dans la base de données
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Appariel'
+          description: ''
+    post:
+      operationId: ml_appariels_create
+      description: Gérer les appariels dans la base de données
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApparielDetail'
+          description: ''
+  /api/ml/appariels/{id}/:
+    get:
+      operationId: ml_appariels_retrieve
+      description: Gérer les appariels dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this appariel.
+        required: true
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApparielDetail'
+          description: ''
+    put:
+      operationId: ml_appariels_update
+      description: Gérer les appariels dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this appariel.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ApparielDetailRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApparielDetail'
+          description: ''
+    patch:
+      operationId: ml_appariels_partial_update
+      description: Gérer les appariels dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this appariel.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedApparielDetailRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedApparielDetailRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedApparielDetailRequest'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApparielDetail'
+          description: ''
+    delete:
+      operationId: ml_appariels_destroy
+      description: Gérer les appariels dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this appariel.
+        required: true
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/ml/mlmodel/:
+    get:
+      operationId: ml_mlmodel_list
+      description: Gérer les modèles ML dans la base de données
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MLModel'
+          description: ''
+  /api/ml/mlmodel/{id}/:
+    put:
+      operationId: ml_mlmodel_update
+      description: Gérer les modèles ML dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this ml model.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MLModelRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MLModelRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MLModelRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MLModel'
+          description: ''
+    patch:
+      operationId: ml_mlmodel_partial_update
+      description: Gérer les modèles ML dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this ml model.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMLModelRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMLModelRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMLModelRequest'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MLModel'
+          description: ''
+    delete:
+      operationId: ml_mlmodel_destroy
+      description: Gérer les modèles ML dans la base de données
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this ml model.
+        required: true
+      tags:
+      - ml
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/ml/mlmodel/{id}/mlmodel-upload-file/:
+    post:
+      operationId: upload_file
+      description: Upload un fichier à un modèle
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this ml model.
+        required: true
+      tags:
+      - ml
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              additionalProperties: {}
+              description: Unspecified request body
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MlModelsFile'
+          description: ''
+  /api/usercreate/:
+    post:
+      operationId: usercreate_create
+      description: Create a new user in the system
+      tags:
+      - usercreate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+  /api/userme/:
+    get:
+      operationId: userme_retrieve
+      description: Manage api de l'utilisateur
+      tags:
+      - userme
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: userme_update
+      description: Manage api de l'utilisateur
+      tags:
+      - userme
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    patch:
+      operationId: userme_partial_update
+      description: Manage api de l'utilisateur
+      tags:
+      - userme
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    delete:
+      operationId: userme_destroy
+      description: Manage api de l'utilisateur
+      tags:
+      - userme
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /api/usertoken:
+    post:
+      operationId: usertoken_create
+      description: Creer un auth token pour l'user
+      tags:
+      - usertoken
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthTokenRequest'
+        required: true
+      security:
+      - cookieAuth: []
+      - basicAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+components:
+  schemas:
+    AppData:
+      type: object
+      description: Serializer pour AppData
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        data:
+          type: object
+          additionalProperties: {}
+        datetime:
+          type: string
+          format: date-time
+      required:
+      - data
+      - datetime
+      - id
+    AppDataRequest:
+      type: object
+      description: Serializer pour AppData
+      properties:
+        data:
+          type: object
+          additionalProperties: {}
+        datetime:
+          type: string
+          format: date-time
+      required:
+      - data
+      - datetime
+    Appariel:
+      type: object
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        name:
+          type: string
+          maxLength: 100
+        user:
+          type: integer
+          readOnly: true
+        app_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppData'
+      required:
+      - name
+      - pk
+      - user
+    ApparielDetail:
+      type: object
+      description: Serializer pour appariel detail
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        name:
+          type: string
+          maxLength: 100
+        user:
+          type: integer
+          readOnly: true
+        app_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppData'
+        description:
+          type: string
+      required:
+      - description
+      - name
+      - pk
+      - user
+    ApparielDetailRequest:
+      type: object
+      description: Serializer pour appariel detail
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        app_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppDataRequest'
+        description:
+          type: string
+      required:
+      - description
+      - name
+    AuthToken:
+      type: object
+      description: Serializer pour l'utilisateur auth token
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    AuthTokenRequest:
+      type: object
+      description: Serializer pour l'utilisateur auth token
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+      required:
+      - email
+      - password
+    MLModel:
+      type: object
+      properties:
+        pk:
+          type: integer
+          readOnly: true
+          title: ID
+        name:
+          type: string
+          maxLength: 100
+        appariel:
+          type: integer
+          readOnly: true
+      required:
+      - appariel
+      - name
+      - pk
+    MLModelRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+      required:
+      - name
+    MlModelsFile:
+      type: object
+      description: Serializer for uploading files to ml models
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        model_file:
+          type: string
+          format: uri
+      required:
+      - id
+      - model_file
+    PatchedAppDataRequest:
+      type: object
+      description: Serializer pour AppData
+      properties:
+        data:
+          type: object
+          additionalProperties: {}
+        datetime:
+          type: string
+          format: date-time
+    PatchedApparielDetailRequest:
+      type: object
+      description: Serializer pour appariel detail
+      properties:
+        name:
+          type: string
+          maxLength: 100
+        app_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AppDataRequest'
+        description:
+          type: string
+    PatchedMLModelRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 100
+    PatchedUserRequest:
+      type: object
+      description: Serialzer poir l'objet utilisateur
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+          minLength: 5
+        name:
+          type: string
+          maxLength: 255
+    User:
+      type: object
+      description: Serialzer poir l'objet utilisateur
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - email
+      - name
+    UserRequest:
+      type: object
+      description: Serialzer poir l'objet utilisateur
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 255
+        password:
+          type: string
+          writeOnly: true
+          maxLength: 128
+          minLength: 5
+        name:
+          type: string
+          maxLength: 255
+      required:
+      - email
+      - name
+      - password
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: Session
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
+tags:
+- name: MLModels
+  description: Gestion des modèles de machine learning.
