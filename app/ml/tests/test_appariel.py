@@ -210,3 +210,33 @@ class PrivateApparielApiTests(TestCase):
         self.assertEqual(app_data.count(), 2)
         for data in payload['app_data']:
             self.assertTrue(app_data.filter(data=data['data']).exists())
+
+    def test_filter_by_user_id(self):
+        """Test filtering appariels by user ID"""
+        create_appariel(user=self.user, name='User1 Appariel')
+        other_user = create_user(email='other_user@example.com',name='User2 Appariel', password='testpass123')
+
+        create_appariel(user=other_user, name='User2 Appariel')
+
+        res = self.client.get(APPARIEL_URL, {'user_id': self.user.id})
+
+        appariels = Appariel.objects.filter(user=self.user)
+        serializer = ApparielSerializer(appariels, many=True)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+    def test_filter_by_user_name(self):
+        """Test filtering appariels by user name"""
+        url = f'{reverse("ml:appariel-list")}?user_name={self.user.name}'
+        res = self.client.get(url)
+        appariels = Appariel.objects.filter(user__name__icontains=self.user.name)
+        serializer = ApparielSerializer(appariels, many=True)
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(res.data, serializer.data)
+
+
+
+
+
+
+

@@ -4,16 +4,32 @@ from django.contrib.auth import get_user_model
 from django.urls import reverse
 from django.test import TestCase
 from django.utils.crypto import get_random_string
+from rest_framework.test import APIClient, APITestCase
+from unittest.mock import patch, Mock
+from django.utils import timezone
+from django.core.files.base import ContentFile
 
 from rest_framework import status
 from rest_framework.test import APIClient
-from unittest.mock import patch
+from unittest.mock import patch,MagicMock,Mock
 
 from core.models import MLModel, Appariel
 from ml.serializers import MLModelSerializer
 from django.utils.dateparse import parse_datetime
 import os
 from django.core.files.uploadedfile import SimpleUploadedFile
+import numpy as np
+from django.core.files import File
+
+import os
+import uuid
+import numpy as np
+import pathlib
+import tensorflow as tf
+from rest_framework import status
+from django.utils.dateparse import parse_datetime
+
+from django.conf import settings
 
 ML_MODEL_URL = reverse('ml:mlmodel-list')
 
@@ -175,3 +191,66 @@ class FileUploadTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_200_OK)
         self.assertIn('model_file', res.data)
         self.assertTrue(os.path.exists(self.mlmodel.model_file.path))
+
+class PredictViewTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.user = create_user(email='user@example.com', password='testpass123')
+        self.client.force_authenticate(self.user)
+        self.appariel = create_appariel(user=self.user)
+
+        # Mock the model file
+        self.model_file_mock = MagicMock(spec=ContentFile)
+        self.model_file_mock.name = 'model_nbeats_tr1_2_energie.keras'
+
+        # Create the MLModel instance
+        self.model = MLModel.objects.create(
+            appariel=self.appariel,
+            name='model1',
+            description='Test model',
+            model_file=self.model_file_mock,
+            created_at=timezone.now(),
+            updated_at=timezone.now()
+        )
+
+        # URL for the predict view
+        self.url = reverse('ml:predict')
+
+    @patch('ml.views.load_ml_model')
+    def test_predict_view_success(self, mock_load_ml_model):
+        # Mock the load_ml_model function to avoid real file loading
+        mock_model = Mock()
+        mock_model.predict.return_value = np.array([[0.1, 0.2, 0.3]])
+        mock_load_ml_model.return_value = mock_model
+
+        # Test data
+        data = {
+            'model_name': self.model.name,
+            'data': [i for i in range(72)]
+        }
+
+        # Make a POST request to the predict view
+        response = self.client.post(self.url, data, format='json')
+
+        # Check if the response is successful
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, {'prediction': [[0.1, 0.2, 0.3]]})
+
+    def test_predict_view_model_not_found(self):
+        data = {
+            'model_name': 'NonExistentModel',
+            'data': [0.1, 0.2, 0.3]
+        }
+        response = self.client.post(self.url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data, {'error': "Le modèle avec le nom 'NonExistentModel' n'existe pas."})
+
+    def test_predict_view_missing_data(self):
+        data = {
+            'model_name': self.model.name
+        }
+        response = self.client.post(self.url, data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data, {'error': 'Please provide both model_name and data.'})

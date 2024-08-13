@@ -11,8 +11,8 @@ from core.models import Appariel,AppData,MLModel
 class MLModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MLModel
-        fields = ['name', 'appariel', 'description', 'model_file']
-        read_only_fields = ['pk']
+        fields = ['pk', 'name', 'appariel']
+        read_only_fields = ['pk', 'appariel']
 
 class AppDataSerializer(serializers.ModelSerializer):
     """Serializer pour AppData"""

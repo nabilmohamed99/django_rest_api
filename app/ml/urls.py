@@ -14,5 +14,9 @@ router.register(r'mlmodel',views.MLModelsViewSet,basename='mlmodel')
 
 app_name = 'ml'
 
-urlpatterns = [path('', include(router.urls))]
+urlpatterns = [path('', include(router.urls)),
+
+
+    path('predict/', views.PredictView.as_view(), name='predict'),
+    path('get-data/', views.GetDataView.as_view(), name='get-data'),]
 

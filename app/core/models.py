@@ -16,7 +16,7 @@ import uuid
 def ml_model_upload_path(instance, filename):
     """Generate file path for new model"""
     ext= os.path.splitext(filename)[1]
-    filename = f'{uuid.uuid4()}{ext}'
+    filename = f'{ext}'
     return os.path.join('uploads','mlmodels',filename)
 
 class UserManager(BaseUserManager):
