@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-(5*n6(1@13pwpek7owl$1$qk!o+hi+q-xwa(fyt0a-j5hte6ib
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.207','localhost']
 
 
 # Application definition
@@ -153,7 +153,7 @@ SPECTACULAR_SETTINGS = {
         {'name': 'MLModels', 'description': 'Gestion des modèles de machine learning.'},
     ],
     'PREPROCESSING_HOOKS': [
-        'drf_spectacular.hooks.preprocess_exclude_path_format', 
+        'drf_spectacular.hooks.preprocess_exclude_path_format',
     ],
     'POSTPROCESSING_HOOKS': [
         'drf_spectacular.hooks.postprocess_schema_enums',
