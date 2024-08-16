@@ -49,6 +49,7 @@ The API provides the following endpoints:
 
 - **`/api/ml/predict/`**
   - `POST`: Make a prediction using a specific model and input data.
+  - ![Example](images/rest_api_exemple_image.png)
 
 ## Example Request
 
