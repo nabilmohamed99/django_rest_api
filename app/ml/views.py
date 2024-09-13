@@ -7,10 +7,13 @@ from rest_framework import (
     mixins,
 )
 import logging
+#from decouple import config # python-dotenv
 
+import os
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
+from bs4 import BeautifulSoup
 
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,8 +21,11 @@ from rest_framework.decorators import action
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse,OpenApiExample
 
+from django.core.cache import cache
+
 from django_filters import rest_framework as filters
 import tensorflow as tf
+import requests
 
 from core.models import Appariel, AppData, MLModel
 from ml import serializers
@@ -184,10 +190,14 @@ class MLModelsViewSet(BaseMlAtrributeViewSet):
     @action(methods=['POST'], detail=True, url_path='mlmodel-upload-file')
     def upload_file(self, request, pk=None):
         """Upload un fichier à un modèle"""
+        print("execution")
         mlmodel = self.get_object()
+        print(mlmodel)
+        print(request.data)
         serializer = self.get_serializer(mlmodel, data=request.data)
 
         if serializer.is_valid():
+            print()
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -273,7 +283,7 @@ class GetDataView(APIView):
     permission_classes = [IsAuthenticated]
     @extend_schema(
         parameters=[
-            OpenApiParameter('param', str, OpenApiParameter.QUERY, description='Appareil identifier')
+            OpenApiParameter('param', str, OpenApiParameter.QUERY, description="Nom d'appariel")
         ],
         responses={
             200: OpenApiResponse(description="Success response with data"),
@@ -282,6 +292,7 @@ class GetDataView(APIView):
     )
     def get(self, request):
         param = request.query_params.get('param')
+
         cache_key = f"data_{param}"
         cached_data = cache.get(cache_key)
         appareils = {
@@ -296,11 +307,13 @@ class GetDataView(APIView):
             return Response(cached_data)
 
         date_actuelle = datetime.now()
-        date_actuelle = date_actuelle.replace(day=1)
+        date_actuelle = date_actuelle.replace(day=10,month=6)
+       # date_actuelle = date_actuelle.replace(day=1)
         date_previeus = date_actuelle - timedelta(hours=72)
         date_actuelle_formatee = date_actuelle.strftime("%d%m%Y%H%M%S")
         date_previeus_formatee = date_previeus.strftime("%d%m%Y%H%M%S")
-        url=f"http://192.168.1.128:80/services/user/records.xml/?begin={date_previeus_formatee}?end={date_actuelle_formatee}?period=3600?var="+var_name
+        serveur=os.getenv('PSS_SERVER_URL', default='')
+        url=f"http://{serveur}:80/services/user/records.xml/?begin={date_previeus_formatee}?end={date_actuelle_formatee}?period=3600?var="+var_name
         print(url)
 
         try:

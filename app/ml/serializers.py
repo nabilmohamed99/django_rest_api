@@ -9,10 +9,12 @@ from core.models import Appariel,AppData,MLModel
 
 
 class MLModelSerializer(serializers.ModelSerializer):
+    appariel_name = serializers.CharField(source='appariel.name', read_only=True)
+
     class Meta:
         model = MLModel
-        fields = ['pk', 'name', 'appariel']
-        read_only_fields = ['pk', 'appariel']
+        fields = ['pk', 'name', 'appariel_name','appariel','model_file']
+        read_only_fields = ['pk','appariel_name']
 
 class AppDataSerializer(serializers.ModelSerializer):
     """Serializer pour AppData"""

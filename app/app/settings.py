@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'user',
     'ml',
+
+
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
@@ -54,6 +57,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
+
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'app.urls'
@@ -159,3 +167,16 @@ SPECTACULAR_SETTINGS = {
         'drf_spectacular.hooks.postprocess_schema_enums',
     ],
 }
+
+
+
+
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.1.101:3000",
+]
+CORS_ALLOW_ALL_ORIGINS = True
+
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880

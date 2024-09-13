@@ -8,6 +8,9 @@ libclang==18.1.1
 lxml==5.2.2
 tensorflow
 django-filter
+decouple
+django-cors-headers
+
 
 
 

@@ -21,6 +21,7 @@ services:
       - DB_NAME=devdb
       - DB_USER=devuser
       - DB_PASS=changeme
+      - PSS_SERVER_URL=192.168.1.207
     depends_on:
       - db
 

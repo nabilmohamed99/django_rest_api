@@ -18,5 +18,5 @@ urlpatterns = [path('', include(router.urls)),
 
 
     path('predict/', views.PredictView.as_view(), name='predict'),
-    path('get-data/', views.GetDataView.as_view(), name='get-data'),]
+    path('get_data/', views.GetDataView.as_view(), name='get-data'),]
 

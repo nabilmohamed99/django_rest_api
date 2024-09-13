@@ -94,7 +94,7 @@ class PrivateModelsApiTests(TestCase):
         models = MLModel.objects.all().order_by('-name')
         serializer = MLModelSerializer(models, many=True)
         self.assertEqual(res.status_code, status.HTTP_200_OK)
-        self.assertEqual(res.data[0]['appariel'], serializer.data[0]['appariel'])
+        self.assertEqual(res.data[0]['appariel_name'], serializer.data[0]['appariel_name'])
 
 
 
